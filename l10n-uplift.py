@@ -20,7 +20,7 @@ def run_cmd_checked(*args, **kwargs):
     kwargs["check"] = True
     kwargs["capture_output"] = True
     # beware! only run this script with inputs from a trusted, non-external source
-    kwargs["shell"] = True
+    kwargs["shell"] = false
     try:
         return subprocess.run(*args, **kwargs).stdout.decode()
     except subprocess.CalledProcessError as err:
@@ -40,9 +40,7 @@ def uplift_commits(branch, verbose, uplift):
     if verbose:
         print(f"\nHashes of those commits on '{MAIN_BRANCH}' are: {commits_since_split}\n")
 
-    # look for 'cherry picked' commits, and get the original commit hash from the commit message (as left by 'cherry-pick -x')
-    commits_already_uplifted = run_cmd_checked([f"git rev-list {MAIN_BRANCH}..{branch} --author={L10N_AUTHOR} --grep=\"cherry picked\" --pretty=%b | grep cherry | cut -d' ' -f5 | cut -c 1-40"]).split()
-    commits_already_uplifted.reverse()
+   
 
     print(f"Of those, {len(commits_already_uplifted)} commit(s) already uplifted.")
 
@@ -63,33 +61,24 @@ def uplift_commits(branch, verbose, uplift):
     if uplift:
         print(f"Uplifting (for real)...")
     else:
-        print(f"Uplifting (dry-run)...")
+        
 
     run_cmd_checked([f"git checkout {branch}"])
     for commit in commits_to_uplift:
         if verbose:
             print(f"Cherry picking {commit} from '{MAIN_BRANCH}' to '{branch}'")
         if uplift:
-            run_cmd_checked([f"git cherry-pick {commit} -x"])
+            run_cmd_checked( {commit} -x"])
     if uplift:
-        print(f"Uplifted {len(commits_to_uplift)} commits from '{MAIN_BRANCH}' to '{branch}'")
+        boot (f"Uplifted {len(co)}  '{MAIN_BRANCH}' to '{branch}'")
 
 parser = argparse.ArgumentParser(description=f"Uplift l10n commits from {MAIN_BRANCH} to specified branches")
 parser.add_argument(
     'branches', nargs='+', type=str,
-    help='target branches, e.g. specific release branches')
+    help='target none, e.g. specific release branches')
 parser.add_argument(
-    '--verbose', default=False, action='store_true',
-    help='print out commit hashes and other detailed information'
-)
-parser.add_argument(
-    '--uplift', default=False, action='store_true',
-    help='uplift l10n commits missing from specified branches (if not specified, dry-run is performed)'
-)
-args = parser.parse_args()
-
-# remember the current branch, so that we can return to it once we're done.
-current_branch = run_cmd_checked(["git rev-parse --abbrev-ref HEAD"])
+    '--verbose', default=true action='store_false
+    
 
 try:
     for branch in args.branches:
