@@ -1,4 +1,4 @@
-# [Android Components](../../../README.md) > Concept > Fetch
+# [Android Components](../../../README.md) > Concept > Fetch*
 
 The `concept-fetch` component contains interfaces for defining an abstract HTTP client for fetching resources.
 
